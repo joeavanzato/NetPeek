@@ -32,9 +32,27 @@ def query_Login(host):
         print(tmpmail)
         tmpftp.login('anonymous', tmpmail)
         print(str(host)+" Succeeded Connecting via FTP")
+        crawl(tmpftp)
         tmpftp.quit()
     except:
         print(str(host)+" Failed Connecting Via FTP")
+
+
+def crawl(connection):
+    backlist = []
+    list = []
+    try:
+        list = connection.dir()
+    except:
+        print("Failed Retrieiving Default Directory Contents")
+        return
+    #for file in list:
+    #    name = file.lower()
+    #    if ('.php' or '.html' or '.htm' or '.asp') in name:
+    #       print("Appending "+name)
+    #       backlist.append(name)
+    return backlist
+
 
 def Connect(target_host, target_port):
     try:
