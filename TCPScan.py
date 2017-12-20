@@ -2,7 +2,6 @@ import socket
 import argparse
 import threading
 import multiprocessing
-import asyncio
 import ftplib
 import random
 import time
