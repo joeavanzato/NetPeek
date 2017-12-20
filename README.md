@@ -9,5 +9,5 @@
  
  -p - Specify ports for use in either TCP Connection Scanning or UDP Datagram Spamming (spaces between ports, ex. -p 21 80 1337)
  
- -u - Enables UDP Spam Mode for Selected Ports - If used with no port selected, defaults to 80
+ -u - Enables UDP Spam Mode for given amount of time for Selected Ports (ex. -u 3, if used with no port selected, defaults to 80)
  
