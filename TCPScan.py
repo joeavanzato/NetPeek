@@ -10,7 +10,7 @@ import sys
 import os
 import port_Flooder
 
-from port_Flooder import flood_port
+#from port_Flooder import flood_port
 from multiprocessing import process
 
 mailfront = ["Zofia", "Test", "Jack", "Alehandro", "Vladimir", "Boston", "Loquisha", "Mahogany", "Ferrari", "Michigan", "August", "Ireland", "Government", "Alerter"]
@@ -72,17 +72,13 @@ def flood_host(host, portlist, flood_time):
         print("Sent Arguments "+str(args_tmp))
         pname = port_Flooder.port_Flooder(host, port, int(flood_time[0]))
         proclist.append(pname)
-        #print(t)
-        #x = proclist[t]
-        #x.start()
         #p = multiprocessing.process.BaseProcess(target = flood_port(host, port, flood_time))
         #p.daemon = True
         #proclist.append(p)
         #p.start()
         #p.close()
-    #for process in proclist:
-        #print(str(process))
-        #process.start()
+        #for process in proclist:
+            #process.start()
     #for process in proclist:
         #process.join()
 

