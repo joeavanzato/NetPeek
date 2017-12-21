@@ -1,5 +1,5 @@
 
-# Generic TCP Port Scanner and Anonymous FTP Login Query
+# TCP Port Scanner, Anonymous FTP Login Query, UDP Flooder
 
  -h - help
  
