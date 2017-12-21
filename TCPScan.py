@@ -52,30 +52,37 @@ elif ((target_Ports[0]) == 0) and ((flood_time) == 0):
 
 def flood_host(host, portlist, flood_time):
     global args_tmp
-    print("Flood_host Test") #Test
+    global proclist
+    print("Flooding Host "+host) #Test
     count = 0
     portrange = len(portlist)
     portlisttmp = []
     proclist = []
     for port in range(portrange):
         portlisttmp.append(portlist[port])
-    for port in range(portrange):
-        port = portlisttmp[port]
+    for t in range(portrange):
+        port = portlisttmp[t]
         count = count + 1
         args_tmp = []
         args_tmp.append(host)
         args_tmp.append(port)
         args_tmp.append(flood_time[0])
-        print("Creating port_Flooder for port "+str(port))
-        print("Using arguments "+str(args_tmp))
-        p = port_Flooder.port_Flooder(host, port, int(flood_time[0]))
-        proclist.append(p)
-        #p.start()
+        pname = "Process "+port
+        print("Creating port_Flooder for port "+str(port)+" with Process Name : "+pname)
+        print("Sent Arguments "+str(args_tmp))
+        pname = port_Flooder.port_Flooder(host, port, int(flood_time[0]))
+        proclist.append(pname)
+        #print(t)
+        #x = proclist[t]
+        #x.start()
         #p = multiprocessing.process.BaseProcess(target = flood_port(host, port, flood_time))
         #p.daemon = True
         #proclist.append(p)
         #p.start()
         #p.close()
+    #for process in proclist:
+        #print(str(process))
+        #process.start()
     #for process in proclist:
         #process.join()
 
